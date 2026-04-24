@@ -1,0 +1,114 @@
+// Version: 1.0.0
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type ExternalBlob__671167343 = Blob;
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
+type MatchId__543136929 = Text;
+type MatchStatus__427144453 = {#closed; #completed; #open};
+type Match__66421370 =
+  {
+    createdAt : Timestamp__301639476;
+    var entryFee : Nat;
+    id : MatchId__543136929;
+    var name : Text;
+    var playerCount : Nat;
+    var prizePool : Nat;
+    var roomId : Text;
+    var roomPassword : Text;
+    var scheduledTime : Timestamp__301639476;
+    var status : MatchStatus__427144453
+  };
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type PaymentId__1028686908 = Text;
+type PaymentStatus__296016569 = {#approved; #pending; #rejected};
+type Payment__149302498 =
+  {
+    createdAt : Timestamp__301639476;
+    id : PaymentId__1028686908;
+    matchId : MatchId__543136929;
+    screenshot : ExternalBlob__671167343;
+    var status : PaymentStatus__296016569;
+    userId : UserId__158757552;
+    utrNumber : Text
+  };
+type ResultId__980923967 = Text;
+type Result__480869361 =
+  {
+    id : ResultId__980923967;
+    kills : Nat;
+    matchId : MatchId__543136929;
+    prize : Nat;
+    rank : Nat;
+    userId : UserId__158757552;
+    username : Text
+  };
+type Timestamp__301639476 = Int;
+type UserId__158757552 = Text;
+type UserRole__1073662873 = {#admin; #guest; #user};
+type UserStatus__357598751 = {#active; #suspended};
+type User__98118558 =
+  {
+    contact : Text;
+    createdAt : Timestamp__301639476;
+    var ffUid : Text;
+    id : UserId__158757552;
+    var passwordHash : Text;
+    var status : UserStatus__357598751;
+    var username : Text;
+    var walletBalance : Nat
+  };
+actor {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__605269027<Principal, UserRole__1073662873>
+    };
+  stable contactIndex :
+    {
+      var root : Node__46230540<Text, UserId__158757552>;
+      var size : Nat__490723111
+    };
+  stable matchIdCounter : {var value : Nat};
+  stable matches :
+    {
+      var root : Node__46230540<MatchId__543136929, Match__66421370>;
+      var size : Nat__490723111
+    };
+  stable paymentIdCounter : {var value : Nat};
+  stable payments :
+    {
+      var root : Node__46230540<PaymentId__1028686908, Payment__149302498>;
+      var size : Nat__490723111
+    };
+  stable principalToUserId :
+    {
+      var root : Node__46230540<Principal, UserId__158757552>;
+      var size : Nat__490723111
+    };
+  stable resultIdCounter : {var value : Nat};
+  stable results :
+    {
+      var root : Node__46230540<ResultId__980923967, Result__480869361>;
+      var size : Nat__490723111
+    };
+  stable userIdCounter : {var value : Nat};
+  stable usernameIndex :
+    {
+      var root : Node__46230540<Text, UserId__158757552>;
+      var size : Nat__490723111
+    };
+  stable users :
+    {
+      var root : Node__46230540<UserId__158757552, User__98118558>;
+      var size : Nat__490723111
+    }
+};

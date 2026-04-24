@@ -1,0 +1,172 @@
+type _ImmutableObjectStorageRefillResult = 
+ record {
+   success: opt bool;
+   topped_up_amount: opt nat;
+ };
+type _ImmutableObjectStorageRefillInformation = record {
+                                                  proposed_top_up_amount:
+                                                   opt nat;};
+type _ImmutableObjectStorageCreateCertificateResult = 
+ record {
+   blob_hash: text;
+   method: text;
+ };
+type UserStatus = 
+ variant {
+   active;
+   suspended;
+ };
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type UserPublic = 
+ record {
+   contact: text;
+   createdAt: Timestamp;
+   ffUid: text;
+   id: UserId;
+   status: UserStatus;
+   username: text;
+   walletBalance: nat;
+ };
+type UserId = text;
+type UpdateProfileInput = 
+ record {
+   ffUid: opt text;
+   password: opt text;
+   username: opt text;
+ };
+type UpdateMatchInput = 
+ record {
+   entryFee: opt nat;
+   name: opt text;
+   prizePool: opt nat;
+   roomId: opt text;
+   roomPassword: opt text;
+   scheduledTime: opt Timestamp;
+ };
+type Timestamp = int;
+type SubmitPaymentInput = 
+ record {
+   matchId: MatchId;
+   screenshot: ExternalBlob;
+   utrNumber: text;
+ };
+type ResultInput = 
+ record {
+   kills: nat;
+   prize: nat;
+   rank: nat;
+   userId: UserId;
+   username: text;
+ };
+type ResultId = text;
+type Result = 
+ record {
+   id: ResultId;
+   kills: nat;
+   matchId: MatchId;
+   prize: nat;
+   rank: nat;
+   userId: UserId;
+   username: text;
+ };
+type RegisterInput = 
+ record {
+   contact: text;
+   ffUid: text;
+   password: text;
+   username: text;
+ };
+type PaymentStatus = 
+ variant {
+   approved;
+   pending;
+   rejected;
+ };
+type PaymentPublic = 
+ record {
+   createdAt: Timestamp;
+   id: PaymentId;
+   matchId: MatchId;
+   screenshot: ExternalBlob;
+   status: PaymentStatus;
+   userId: UserId;
+   utrNumber: text;
+ };
+type PaymentId = text;
+type MatchStatus = 
+ variant {
+   closed;
+   completed;
+   open;
+ };
+type MatchPublic = 
+ record {
+   createdAt: Timestamp;
+   entryFee: nat;
+   id: MatchId;
+   name: text;
+   playerCount: nat;
+   prizePool: nat;
+   scheduledTime: Timestamp;
+   status: MatchStatus;
+ };
+type MatchId = text;
+type MatchCredentials = 
+ record {
+   roomId: text;
+   roomPassword: text;
+ };
+type ExternalBlob = blob;
+type CreateMatchInput = 
+ record {
+   entryFee: nat;
+   name: text;
+   prizePool: nat;
+   roomId: text;
+   roomPassword: text;
+   scheduledTime: Timestamp;
+ };
+service : {
+  _immutableObjectStorageBlobsAreLive: (hashes: vec blob) -> (vec bool) query;
+  _immutableObjectStorageBlobsToDelete: () -> (vec blob) query;
+  _immutableObjectStorageConfirmBlobDeletion: (blobs: vec blob) -> ();
+  _immutableObjectStorageCreateCertificate: (blobHash: text) ->
+   (_ImmutableObjectStorageCreateCertificateResult);
+  _immutableObjectStorageRefillCashier: (refillInformation:
+   opt _ImmutableObjectStorageRefillInformation) ->
+   (_ImmutableObjectStorageRefillResult);
+  _immutableObjectStorageUpdateGatewayPrincipals: () -> ();
+  _initializeAccessControl: () -> ();
+  approvePayment: (paymentId: PaymentId) -> ();
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  closeMatch: (matchId: MatchId) -> ();
+  createMatch: (input: CreateMatchInput) -> (MatchPublic);
+  deleteMatch: (matchId: MatchId) -> ();
+  getCallerUserRole: () -> (UserRole) query;
+  getMatch: (matchId: MatchId) -> (opt MatchPublic) query;
+  getMatchPlayers: (matchId: MatchId) -> (vec UserId) query;
+  getMatchResults: (matchId: MatchId) -> (vec Result) query;
+  getMyPayments: () -> (vec PaymentPublic) query;
+  getMyProfile: () -> (opt UserPublic) query;
+  getRoomCredentials: (matchId: MatchId) -> (MatchCredentials) query;
+  getUserById: (userId: UserId) -> (opt UserPublic) query;
+  isCallerAdmin: () -> (bool) query;
+  listAllPayments: () -> (vec PaymentPublic) query;
+  listMatches: () -> (vec MatchPublic) query;
+  listPaymentsByMatch: (matchId: MatchId) -> (vec PaymentPublic) query;
+  listUsers: () -> (vec UserPublic) query;
+  loginUser: (identifier: text, password: text) -> (opt UserPublic);
+  register: (input: RegisterInput) -> (UserPublic);
+  rejectPayment: (paymentId: PaymentId) -> ();
+  submitPayment: (input: SubmitPaymentInput) -> (PaymentPublic);
+  suspendUser: (userId: UserId) -> ();
+  unsuspendUser: (userId: UserId) -> ();
+  updateMatch: (matchId: MatchId, input: UpdateMatchInput) -> (MatchPublic);
+  updateMyProfile: (input: UpdateProfileInput) -> (UserPublic);
+  uploadResults: (matchId: MatchId, entries: vec ResultInput) -> (vec Result);
+}

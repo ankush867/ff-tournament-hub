@@ -1,0 +1,22 @@
+{
+  "overview": "A full-stack Free Fire tournament platform where players can register, join matches, submit UPI payments for approval, and track results — with a complete admin panel for managing matches, players, and payouts.",
+  "features": [
+    "User registration and login with Free Fire UID",
+    "Match browsing and joining with entry fees",
+    "UPI payment submission with QR code and screenshot upload",
+    "Admin approval to reveal room ID and password",
+    "Match results and leaderboard per tournament",
+    "Admin panel: manage users, matches, payments, and results",
+    "Floating WhatsApp support button"
+  ],
+  "category": "gaming",
+  "tags": [
+    "free-fire",
+    "tournament",
+    "gaming",
+    "esports",
+    "upi",
+    "admin-panel"
+  ],
+  "last_updated": "2026-04-24T09:22:03.117Z"
+}
